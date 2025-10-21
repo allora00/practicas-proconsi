@@ -6,11 +6,10 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
 object KtorClient {
-    val httpClient = HttpClient{
+    val httpClient = HttpClient {
         install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-            })
+            json(Json { ignoreUnknownKeys = true })
         }
     }
 }
+    
