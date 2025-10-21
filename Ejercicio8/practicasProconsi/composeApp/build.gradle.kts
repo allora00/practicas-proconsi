@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-val ktor_version: String by project
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -18,41 +17,81 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
-
     }
 
     iosX64()
     iosArm64()
     iosSimulatorArm64()
-    
+
     jvm()
-    
+
     sourceSets {
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.androidx.room.sqlite.wrapper)
+
+        val commonMain by getting {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
+                implementation(compose.ui)
+                implementation(compose.components.resources)
+                implementation(compose.components.uiToolingPreview)
+
+                implementation(libs.androidx.lifecycle.viewmodelCompose)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+
+                implementation(libs.androidx.room.runtime)
+                implementation(libs.androidx.sqlite.bundled)
+
+                implementation("androidx.datastore:datastore:1.1.7")
+                implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.ktor.client.logging)
+
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
+
+                implementation("me.tatarka.inject:kotlin-inject-runtime:0.8.0")
+            }
         }
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
-            implementation("androidx.datastore:datastore:1.1.7")
-            implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+        val androidMain by getting {
+            dependencies {
+                implementation(compose.preview)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.androidx.room.sqlite.wrapper)
+
+                implementation(libs.ktor.client.android)
+            }
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+
+        val iosMain by creating {
+            dependsOn(commonMain)
+
+            dependencies {
+                implementation(libs.ktor.client.darwin)
+            }
         }
-        jvmMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutinesSwing)
+
+        val iosX64Main by getting { dependsOn(iosMain) }
+        val iosArm64Main by getting { dependsOn(iosMain) }
+        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutinesSwing)
+
+                implementation(libs.ktor.client.cio)
+            }
+        }
+
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+            }
         }
     }
 }
@@ -85,18 +124,23 @@ android {
 }
 
 dependencies {
+
     debugImplementation(compose.uiTooling)
-    implementation("io.ktor:ktor-client-core:${ktor_version}")
-    implementation("io.ktor:ktor-client-cio:${ktor_version}")
-    ksp("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
-    implementation("me.tatarka.inject:kotlin-inject-runtime:0.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
+
+    "kspAndroid"(libs.androidx.room.compiler)
+    "kspAndroid"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
+
+    "kspJvm"(libs.androidx.room.compiler)
+    "kspJvm"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
+
+    "kspIosX64"(libs.androidx.room.compiler)
+    "kspIosX64"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
+
+    "kspIosArm64"(libs.androidx.room.compiler)
+    "kspIosArm64"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
+
+    "kspIosSimulatorArm64"(libs.androidx.room.compiler)
+    "kspIosSimulatorArm64"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
 }
 
 compose.desktop {
@@ -109,11 +153,6 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
-}
-
-repositories {
-    mavenCentral()
-    google()
 }
 
 room {
