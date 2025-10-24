@@ -7,10 +7,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
-    kotlin("plugin.serialization") version "2.2.0"
     alias(libs.plugins.ksp)
-    alias(libs.plugins.androidx.room)
-}
+    alias(libs.plugins.androidx.room)}
 
 kotlin {
     androidTarget {
@@ -19,89 +17,49 @@ kotlin {
         }
     }
 
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
 
     jvm()
 
     sourceSets {
-
-        val commonMain by getting {
-            dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material3)
-                implementation(compose.ui)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
-
-                implementation(libs.androidx.lifecycle.viewmodelCompose)
-                implementation(libs.androidx.lifecycle.runtimeCompose)
-
-                implementation(libs.androidx.room.runtime)
-                implementation(libs.androidx.sqlite.bundled)
-
-                implementation("androidx.datastore:datastore:1.1.7")
-                implementation("androidx.datastore:datastore-preferences:1.1.7")
-
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.content.negotiation)
-                implementation(libs.ktor.serialization.kotlinx.json)
-                implementation(libs.ktor.client.logging)
-
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
-
-                implementation("me.tatarka.inject:kotlin-inject-runtime:0.8.0")
-            }
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
         }
-
-        val androidMain by getting {
-            dependencies {
-                implementation(compose.preview)
-                implementation(libs.androidx.activity.compose)
-                implementation(libs.androidx.room.sqlite.wrapper)
-
-                implementation(libs.ktor.client.android)
-            }
+        commonMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlin.inject.runtime)
         }
-
-        val iosMain by creating {
-            dependsOn(commonMain)
-
-            dependencies {
-                implementation(libs.ktor.client.darwin)
-            }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
         }
-
-        val iosX64Main by getting { dependsOn(iosMain) }
-        val iosArm64Main by getting { dependsOn(iosMain) }
-        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(compose.desktop.currentOs)
-                implementation(libs.kotlinx.coroutinesSwing)
-
-                implementation(libs.ktor.client.cio)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutinesSwing)
         }
     }
 }
 
 android {
-    namespace = "org.example.project"
+    namespace = "org.proconsi.multiplatform"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "org.example.project"
+        applicationId = "org.proconsi.multiplatform"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -122,39 +80,25 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 dependencies {
-
     debugImplementation(compose.uiTooling)
-
-    "kspAndroid"(libs.androidx.room.compiler)
-    "kspAndroid"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
-
-    "kspJvm"(libs.androidx.room.compiler)
-    "kspJvm"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
-
-    "kspIosX64"(libs.androidx.room.compiler)
-    "kspIosX64"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
-
-    "kspIosArm64"(libs.androidx.room.compiler)
-    "kspIosArm64"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
-
-    "kspIosSimulatorArm64"(libs.androidx.room.compiler)
-    "kspIosSimulatorArm64"("me.tatarka.inject:kotlin-inject-compiler-ksp:0.8.0")
 }
 
 compose.desktop {
     application {
-        mainClass = "org.example.project.MainKt"
+        mainClass = "org.proconsi.multiplatform.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.example.project"
+            packageName = "org.proconsi.multiplatform"
             packageVersion = "1.0.0"
         }
     }
 }
 
-room {
-    schemaDirectory("$projectDir/schemas")
+ksp{
+    arg("me.tatarka.inject.generate.ksp", "true")
 }
