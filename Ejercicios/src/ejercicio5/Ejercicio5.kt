@@ -4,9 +4,10 @@ fun main(){
     val stdIn = "Bread$$##12.5$$##10";
     val valores = ItemSeparator(stdIn)
 
-    println("Nombre: " + valores.name)
-    println("Precio: " + valores.price)
-    println("Cantidad: " + valores.quantity)
+    println("--- CADENA ORIGINAL ---\n$stdIn\n")
+    println("-Nombre: " + valores.name)
+    println("-Precio: " + valores.price)
+    println("-Cantidad: " + valores.quantity)
 }
 
 class ItemSeparator(val valores: String){
