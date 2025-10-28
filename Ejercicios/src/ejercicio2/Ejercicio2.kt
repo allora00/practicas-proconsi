@@ -7,22 +7,28 @@ fun main(){
 
     val texto: String = "Proconsi es una empresa de Tecnologías de la Información y la Comunicación especializada en el desarrollo e integración de soluciones informáticas para todo tipo de empresas. Más de tres décadas de experiencia avalan a una compañía tan flexible como responsable. Cuenta con un equipo multidisciplinar de más de 120 profesionales cualificados, expertos y comprometidos con un único objetivo: hallar la solución tecnológica exacta para cada cliente. Proconsi es especialista en la creación y el desarrollo de software de gestión, consultoría tecnológica, dirección y gestión de proyectos I+D+i basados en TIC, soporte técnico, aplicaciones móviles y fomento de tendencias en nuevas tecnologías, como el cloud computing."
 
+    println("--- NUMERO DE CARACTERES ---")
     val caracteres = numCaracteres(texto)
-    println("El numero de caracteres es: $caracteres")
+    println("El numero de caracteres es: $caracteres\n" )
 
+    println("--- TEXTO EN MAYUSCULAS ---")
     val mayuscula = mayuscula(texto)
-    println(mayuscula)
+    println("$mayuscula\n")
 
+    println("--- TEXTO EN MINUSCULA ---")
     val minuscula = minuscula(texto)
-    println(minuscula)
+    println("$minuscula\n")
 
+    println("--- PALABRAS REPETIDAS ---")
     palabrasRep(texto)
 
+    println("--- TEXTO SUSTITUIDO ---")
     val sustituir = sustituir(texto)
-    println(sustituir)
+    println("$sustituir\n")
 
+    println("--- PALABRAS CONCATENADAS ---")
     val concatenar = concatenar(texto)
-    println("Se ha terdado: $concatenar en concatenar la cadena")
+    println("Se ha terdado: $concatenar en concatenar la cadena\n")
 }
 
 fun numCaracteres(texto: String): Int{
@@ -52,14 +58,18 @@ fun palabrasRep(texto: String){
     val palabras = texto.split(" ")
     val conteo = palabras.groupingBy { it }.eachCount()
     val repetidas = conteo.filter { it.value > 1 }.keys
+    val ultimo = repetidas.size-1
     if (repetidas.isEmpty()) {
         println("No hay palabras repetidas.")
     } else {
-        println("Palabras repetidas:")
-        for (palabra in repetidas) {
-            print("$palabra  " )
+        for ((index,palabra) in repetidas.withIndex()) {
+            if(index == ultimo){
+                print(palabra)
+            }else{
+                print("$palabra , ")
+            }
         }
-        println("")
+        println("\n")
     }
 }
 
