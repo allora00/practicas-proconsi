@@ -6,9 +6,18 @@ import kotlin.math.pow
 fun main(){
     println("Introduce 2 numeros y los decimales a los que quieres redondear")
     print("Numero 1: ")
-    val num1 = readln().toDouble()
+    var num1 = readln().toDouble()
     print("Numero 2: ")
-    val num2 = readln().toDouble()
+    var num2 = readln().toDouble()
+
+    while(num1 == 0.0 || num2 == 0.0){
+        println("Los numeros no pueden ser 0")
+        print("Numero 1: ")
+        num1 = readln().toDouble()
+        print("Numero 2: ")
+        num2 = readln().toDouble()
+    }
+
     print("Decimales: ")
     val decimales = readln().toInt()
 
