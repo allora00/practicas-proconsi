@@ -1,6 +1,6 @@
 import ClienteRepository.anadirCliente
 import ClienteRepository.borrarCliente
-import ClienteRepository.consultarCliente
+import Clientes.id
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -35,10 +35,6 @@ fun main() {
 fun menuAnadirCliente() {
     print("Introduce DNI: ")
     val dni = readln()
-    if (consultarCliente(dni) != null) {
-        println("Error: Ya existe un cliente con ese DNI.")
-        return
-    }
 
     print("Introduce nombre y apellidos: ")
     val nombre = readln()
@@ -69,36 +65,36 @@ fun menuAnadirCliente() {
 }
 
 fun menuConsultarCliente() {
-    print("Introduce el DNI del cliente a consultar: ")
-    val dni = readlnOrNull()?.uppercase()?.trim() ?: ""
-    val cliente = ClienteRepository.consultarCliente(dni)
+    print("Introduce el ID del cliente a consultar: ")
+    val id = readln().toLong()
+    val cliente = ClienteRepository.consultarCliente(id)
 
     if (cliente != null) {
         println("Datos del cliente:")
         imprimirCliente(cliente)
     } else {
-        println("No se encontró ningún cliente con ese DNI.")
+        println("No se encontró ningún cliente con ese ID.")
     }
 }
 
 fun menuBorrarCliente() {
-    print("Introduce el DNI del cliente a borrar: ")
-    val dni = readln()
-    if (borrarCliente(dni)) {
+    print("Introduce el ID del cliente a borrar: ")
+    val id = readln().toLong()
+    if (borrarCliente(id)) {
         println("Cliente borrado con éxito.")
     } else {
-        println("No se encontró ningún cliente con ese DNI para borrar.")
+        println("No se encontró ningún cliente con ese ID para borrar.")
     }
 }
 
 fun menuEditarCliente() {
     println("\nEditar Cliente")
-    print("Introduce el DNI del cliente a editar: ")
-    val dni = readlnOrNull()?.uppercase()?.trim() ?: ""
-    val clienteExistente = ClienteRepository.consultarCliente(dni)
+    print("Introduce el ID del cliente a editar: ")
+    val id = readln().toLong()
+    val clienteExistente = ClienteRepository.consultarCliente(id)
 
     if (clienteExistente == null) {
-        println("No se encontró ningún cliente con ese DNI.")
+        println("No se encontró ningún cliente con ese ID.")
         return
     }
 
@@ -165,18 +161,19 @@ fun menuListarClientes() {
 }
 
 fun obtenerFechaActualFormateada(): String {
-    val formato = DateTimeFormatter.ofPattern("yyyy/MM/dd HHmmss")
+    val formato = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")
     return LocalDateTime.now().format(formato)
 }
 
 fun imprimirCliente(cliente: Cliente) {
     println("")
-    println("DNI:         ${cliente.dni}")
-    println("Nombre:      ${cliente.nombreCompleto}")
-    println("Tipo:        ${cliente.tipoCliente}")
+    print("ID: ${cliente.id}    ")
+    print("DNI: ${cliente.dni}    ")
+    print("Nombre: ${cliente.nombreCompleto}    ")
+    print("Tipo: ${cliente.tipoCliente}    ")
     if (cliente.tipoCliente == "REGISTRADO") {
-        println("Cuota Max:   ${cliente.cuotaMaxima ?: "No especificada"}")
+        print("Cuota Max: ${cliente.cuotaMaxima ?: "No especificada"}    ")
     }
-    println("Fecha Alta:  ${cliente.fechaAlta}")
+    print("Fecha Alta: ${cliente.fechaAlta}    ")
     println("")
 }

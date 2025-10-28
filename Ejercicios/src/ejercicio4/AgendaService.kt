@@ -5,6 +5,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object ClienteRepository {
 
     private fun toCliente(row: ResultRow): Cliente = Cliente(
+        id = row[Clientes.id],
         dni = row[Clientes.dni],
         nombreCompleto = row[Clientes.nombreCompleto],
         tipoCliente = row[Clientes.tipoCliente],
@@ -24,24 +25,24 @@ object ClienteRepository {
         }
     }
 
-    fun consultarCliente(dniCliente: String): Cliente? {
+    fun consultarCliente(id: Long): Cliente? {
         return transaction {
-            Clientes.select { Clientes.dni eq dniCliente }
+            Clientes.select { Clientes.id eq id }
                 .map { toCliente(it) }
                 .singleOrNull()
         }
     }
 
-    fun borrarCliente(dniCliente: String): Boolean {
+    fun borrarCliente(id: Long): Boolean {
         return transaction {
-            val rowsDeleted = Clientes.deleteWhere { Clientes.dni eq dniCliente }
+            val rowsDeleted = Clientes.deleteWhere { Clientes.id eq id }
             rowsDeleted > 0
         }
     }
 
     fun editarCliente(clienteActualizado: Cliente): Boolean {
         return transaction {
-            val rowsUpdated = Clientes.update({ Clientes.dni eq clienteActualizado.dni }) {
+            val rowsUpdated = Clientes.update({ Clientes.id eq clienteActualizado.id!! }) {
                 it[nombreCompleto] = clienteActualizado.nombreCompleto
                 it[tipoCliente] = clienteActualizado.tipoCliente
                 it[cuotaMaxima] = clienteActualizado.cuotaMaxima
