@@ -105,7 +105,7 @@ fun colorAleatorio(): String{
 }
 
 fun mostrarFiguras(lista: List<Figura>) {
-    println("Figuras en orden de creación: " )
+    println("--- FIGURAS POR CREACION ---" )
     if(lista.isEmpty()){
         println("La lista esta vacia")
         return
@@ -114,18 +114,39 @@ fun mostrarFiguras(lista: List<Figura>) {
 }
 
 fun mostrarAgrupadas(lista: List<Figura>) {
-    println("\nFiguras por tipo: ")
+    println("\n--- FIGURAS POR TIPO ---")
     if(lista.isEmpty()){
         println("La lista esta vacia")
         return
     }
-    println("\nCirculos: ")
-    lista.filterIsInstance<Circulo>().forEach(){println(it)}
+    println("\nCIRCULOS")
+    val circulos = lista.filterIsInstance<Circulo>()
+    if (circulos.isEmpty()) {
+        println("No hay círculos.")
+    } else {
+        circulos.forEachIndexed { index, circulo ->
+            println("${index + 1}. $circulo")
+        }
+    }
 
-    println("\nTriangulos: ")
-    lista.filterIsInstance<Triangulo>().forEach(){println(it)}
+    println("\nTRIANGULOS")
+    val triangulos = lista.filterIsInstance<Triangulo>()
+    if (triangulos.isEmpty()) {
+        println("No hay triángulos.")
+    } else {
+        triangulos.forEachIndexed { index, triangulo ->
+            println("${index + 1}. $triangulo")
+        }
+    }
 
-    println("\nCuadrados: ")
-    lista.filterIsInstance<Cuadrado>().forEach(){println(it)}
+    println("\nCUADRADOS")
+    val cuadrados = lista.filterIsInstance<Cuadrado>()
+    if (cuadrados.isEmpty()) {
+        println("No hay cuadrados.")
+    } else {
+        cuadrados.forEachIndexed { index, cuadrado ->
+            println("${index + 1}. $cuadrado")
+        }
+    }
 }
 
