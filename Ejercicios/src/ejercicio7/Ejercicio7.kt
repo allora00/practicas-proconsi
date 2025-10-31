@@ -2,7 +2,7 @@ package ejercicio7
 
 fun main(){
     var numero: Int?
-    println("Introduzca un numero")
+    println("--- INTRODUZCA UN NUMERO ---")
     do{
         val entrada = readlnOrNull()
         numero = entrada?.toIntOrNull()
