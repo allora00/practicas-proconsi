@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.proconsi.multiplatform.data.remote.dto.Lugar
 import org.proconsi.multiplatform.data.remote.LugarRepo
+import org.proconsi.multiplatform.domain.model.Elemento
 
 data class LugaresUiState(
-    val lugares: List<Lugar> = emptyList(),
+    val lugares: List<Elemento> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )
@@ -29,7 +30,7 @@ class AppViewModel(private val lugarRepo: LugarRepo) : ViewModel() {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                val listaDeLugares = lugarRepo.getLugares()
+                val listaDeLugares: List<Elemento> = lugarRepo.getLugares()
                 println("ÉXITO: Se recibieron ${listaDeLugares.size} lugares.")
                 _uiState.update {
                     it.copy(
