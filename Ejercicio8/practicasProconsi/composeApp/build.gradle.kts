@@ -45,7 +45,9 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlin.inject.runtime)
-            implementation("io.coil-kt:coil-compose:2.6.0")
+            implementation(libs.kamel.image.default)
+
+
 
         }
         commonTest.dependencies {
