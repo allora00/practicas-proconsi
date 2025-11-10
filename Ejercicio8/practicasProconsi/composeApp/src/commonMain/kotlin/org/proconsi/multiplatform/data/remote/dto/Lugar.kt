@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
+//Clase serializable que declara los parametros del JSON
 @Serializable
 data class Lugar(
     @SerialName("idFicha")

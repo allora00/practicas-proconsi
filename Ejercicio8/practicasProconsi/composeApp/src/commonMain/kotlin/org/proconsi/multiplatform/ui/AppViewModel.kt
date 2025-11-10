@@ -6,32 +6,38 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.proconsi.multiplatform.data.remote.dto.Lugar
-import org.proconsi.multiplatform.data.remote.LugarRepo
+import org.proconsi.multiplatform.data.remote.LugarApi
 import org.proconsi.multiplatform.domain.model.Elemento
 
+//Data class, solo para guardar datos
 data class LugaresUiState(
     val lugares: List<Elemento> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )
 
-class AppViewModel(private val lugarRepo: LugarRepo) : ViewModel() {
+//Actua de puente entre la logica y la interfaz
+class AppViewModel(private val lugarApi: LugarApi) : ViewModel() {
 
+    //Crea contenedor de estado de la ui
     private val _uiState = MutableStateFlow(LugaresUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        println("AppViewModel INICIADO. Cargando la lista de lugares...")
+        println("Cargando la lista de lugares...")
         cargarListaDeLugares()
     }
 
     fun cargarListaDeLugares() {
+        //Pone el estado a cargando
         _uiState.update { it.copy(isLoading = true) }
+        //Inicia corrutina
         viewModelScope.launch {
             try {
-                val listaDeLugares: List<Elemento> = lugarRepo.getLugares()
-                println("ÉXITO: Se recibieron ${listaDeLugares.size} lugares.")
+                //Se cogen los lugares de la lista de LugarApi
+                val listaDeLugares: List<Elemento> = lugarApi.getLugares()
+                println("Se recibieron ${listaDeLugares.size} lugares.")
+                //Si es exitoso, se actualizan los estados con los datos
                 _uiState.update {
                     it.copy(
                         lugares = listaDeLugares,

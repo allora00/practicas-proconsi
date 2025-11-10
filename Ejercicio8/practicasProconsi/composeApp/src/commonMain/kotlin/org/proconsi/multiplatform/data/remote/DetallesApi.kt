@@ -5,7 +5,7 @@ import io.ktor.client.request.get
 import org.proconsi.multiplatform.data.remote.dto.Lugar
 import org.proconsi.multiplatform.data.createHttpClient
 
-class DetallesRepo {
+class DetallesApi {
     private val httpClient = createHttpClient()
     private val baseUrl = "https://tuciudaddecerca-api.proconsi.com/Ficha"
     suspend fun getDetalles(idFicha: Int): Lugar? {

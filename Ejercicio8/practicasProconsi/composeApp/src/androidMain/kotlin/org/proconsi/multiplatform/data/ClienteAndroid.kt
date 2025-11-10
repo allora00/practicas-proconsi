@@ -9,10 +9,12 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import java.util.concurrent.TimeUnit
 
+//Clase que crea el cliente Http
 actual fun createHttpClient(): HttpClient {
     return HttpClient(OkHttp) {
         engine {
             config {
+                //Tiempo max de conexion y de lectura
                 connectTimeout(20, TimeUnit.SECONDS)
                 readTimeout(20, TimeUnit.SECONDS)
             }

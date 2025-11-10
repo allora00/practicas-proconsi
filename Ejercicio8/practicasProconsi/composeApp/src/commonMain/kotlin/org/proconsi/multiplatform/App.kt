@@ -5,14 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.proconsi.multiplatform.data.remote.LugarRepo
+import org.proconsi.multiplatform.data.remote.LugarApi
 import org.proconsi.multiplatform.ui.AppViewModel
 import org.proconsi.multiplatform.ui.lista.ListScreen
 
 @Composable
 internal fun App() {
-    val lugarRepo = LugarRepo()
-    val appViewModel: AppViewModel = viewModel { AppViewModel(lugarRepo) }
+    val lugarApi = LugarApi()
+    val appViewModel: AppViewModel = viewModel { AppViewModel(lugarApi) }
     val uiState by appViewModel.uiState.collectAsState()
 
     MaterialTheme {
