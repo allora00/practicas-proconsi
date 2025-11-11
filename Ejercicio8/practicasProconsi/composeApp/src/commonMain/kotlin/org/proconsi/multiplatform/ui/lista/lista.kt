@@ -1,8 +1,13 @@
 package org.proconsi.multiplatform.ui.lista
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -14,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.proconsi.multiplatform.ui.LugaresUiState
 import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
+import org.proconsi.multiplatform.domain.model.Elemento
 
 @Composable
 fun ListScreen(uiState: LugaresUiState) {
@@ -32,7 +39,7 @@ fun ListScreen(uiState: LugaresUiState) {
             uiState.lugares.isNotEmpty() -> {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(uiState.lugares) { lugar ->
-                        Text(text = lugar.nombre, modifier = Modifier.padding(16.dp))
+                        LugarItem(lugar)
                         HorizontalDivider()
                     }
                 }
@@ -44,6 +51,25 @@ fun ListScreen(uiState: LugaresUiState) {
     }
 }
 
+@Composable
+fun LugarItem(lugar: Elemento, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth().padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        KamelImage(
+            resource = asyncPainterResource(data = lugar.urlImagen),
+            contentDescription = "Imagen de ${lugar.nombre}",
+            modifier = Modifier.size(80.dp),
 
+            onLoading = { progress -> CircularProgressIndicator(progress) },
+            onFailure = {
+                println("Error al cargar la imagen: ${it.message}")
+                Text("Error")}
+        )
 
-/////PONER VIEWMODEL EN EL LISTADO
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Text(text = lugar.nombre)
+    }
+}
