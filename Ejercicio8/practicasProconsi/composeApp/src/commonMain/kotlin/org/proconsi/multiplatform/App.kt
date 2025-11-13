@@ -13,7 +13,7 @@ import org.proconsi.multiplatform.ui.lista.ListScreen
 internal fun App() {
     val lugarApi = LugarApi()
     val appViewModel: AppViewModel = viewModel { AppViewModel(lugarApi) }
-    val uiState by appViewModel.uiState.collectAsState()
+    val uiState by appViewModel.lugaresUiState.collectAsState()
 
     MaterialTheme {
         ListScreen(uiState = uiState)

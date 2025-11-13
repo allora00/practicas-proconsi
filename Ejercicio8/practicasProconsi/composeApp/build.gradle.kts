@@ -46,9 +46,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlin.inject.runtime)
             implementation(libs.kamel.image.default)
-
-
-
+            implementation("androidx.navigation:navigation-compose:2.9.6")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
