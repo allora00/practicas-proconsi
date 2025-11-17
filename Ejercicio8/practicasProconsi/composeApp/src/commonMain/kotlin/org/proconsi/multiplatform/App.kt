@@ -5,37 +5,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
+import cafe.adriel.voyager.navigator.Navigator
 import org.proconsi.multiplatform.data.remote.LugarApi
 import org.proconsi.multiplatform.ui.AppViewModel
+import org.proconsi.multiplatform.ui.LugaresUiState
 import org.proconsi.multiplatform.ui.lista.ListScreen
-import org.proconsi.multiplatform.ui.NavRoutes
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import java.awt.Button
 
 @Composable
 internal fun App() {
     val lugarApi = LugarApi()
     val appViewModel: AppViewModel = viewModel { AppViewModel(lugarApi) }
-    val lugaresState by appViewModel.lugaresUiState.collectAsState()
-    val navController = rememberNavController()
+    val uiState by appViewModel.lugaresUiState.collectAsState()
 
     MaterialTheme {
-        NavHost(
-            navController = navController,
-            startDestination = NavRoutes.LISTA
-        ) {
-            composable(NavRoutes.LISTA) {
-                ListScreen(
-                    Button(
-                        uiState = lugaresState,
-                        onClick = { lugar ->
-                            navController.navigate("${NavRoutes.DETALLES}/${lugar.id}")
-                        }
-                    )
-                )
-            }
-        }
+        Navigator(screen = ListScreen(uiState = uiState))
     }
 }

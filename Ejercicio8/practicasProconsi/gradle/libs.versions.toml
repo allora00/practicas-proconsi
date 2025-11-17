@@ -49,7 +49,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlin-inject-runtime = {group = "me.tatarka.inject", name = "kotlin-inject-runtime", version.ref = "kotlin-inject"}
 kotlin-inject-compiler = { group = "me.tatarka.inject", name = "kotlin-inject-compiler-ksp", version.ref = "kotlin-inject" }
 kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
-
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
 
 [plugins]
