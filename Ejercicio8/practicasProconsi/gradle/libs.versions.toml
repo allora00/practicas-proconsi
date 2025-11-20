@@ -22,7 +22,8 @@ kotlinx-serialization = "1.6.0"
 kotlin-inject="0.7.0"
 kamel = "1.0.8"
 voyager = "1.0.0"
-
+koin = "3.5.6"
+koin-compose = "3.5.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -51,8 +52,7 @@ kotlin-inject-compiler = { group = "me.tatarka.inject", name = "kotlin-inject-co
 kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref = "kamel" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
-
-
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager"}
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }

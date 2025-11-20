@@ -1,5 +1,6 @@
 package org.proconsi.multiplatform.data.remote
 
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -9,7 +10,7 @@ import org.proconsi.multiplatform.domain.model.toElemento
 import org.proconsi.multiplatform.domain.model.Elemento
 import org.proconsi.multiplatform.domain.repository.LugarRepository
 
-class LugarApi : LugarRepository {
+class LugarApi(httpClient1: HttpClient) : LugarRepository {
     private val httpClient = createHttpClient()
     private val apiUrl = "https://tuciudaddecerca-api.proconsi.com/Categoria"
 

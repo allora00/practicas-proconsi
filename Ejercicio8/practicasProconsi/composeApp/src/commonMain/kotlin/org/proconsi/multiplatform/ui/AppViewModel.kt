@@ -1,13 +1,15 @@
 package org.proconsi.multiplatform.ui
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.proconsi.multiplatform.data.remote.DetallesApi
 import org.proconsi.multiplatform.data.remote.LugarApi
 import org.proconsi.multiplatform.domain.model.Elemento
+import org.proconsi.multiplatform.domain.model.toElemento
 
 //Data class para guardar la lista de lugares
 data class LugaresUiState(
@@ -24,7 +26,7 @@ data class DetallesUiState(
 )
 
 //Actua de puente entre la logica y la interfaz
-class AppViewModel(private val lugarApi: LugarApi) : ViewModel() {
+class AppViewModel(private val lugarApi: LugarApi, private val detallesApi: DetallesApi) : ScreenModel {
 
     //Crea contenedor de estado de la ui
     private val _lugaresUiState = MutableStateFlow(LugaresUiState())
@@ -41,7 +43,7 @@ class AppViewModel(private val lugarApi: LugarApi) : ViewModel() {
     fun cargarListaDeLugares() {
         //Pone el estado a cargando
         _lugaresUiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
+        screenModelScope.launch {
             try {
                 //Se cogen TODOS los lugares de la lista de LugarApi a la vez
                 val listaDeLugares: List<Elemento> = lugarApi.getLugares()
@@ -68,22 +70,24 @@ class AppViewModel(private val lugarApi: LugarApi) : ViewModel() {
 
     fun cargarDetallesDeLugar(id: Int) {
         _detallesUiState.update { it.copy(isLoading = true) }
-        val lugarEncontrado = _lugaresUiState.value.lugares.find { it.id == id }
-
-        if (lugarEncontrado != null) {
-           _detallesUiState.update {
-                it.copy(
-                    lugar = lugarEncontrado,
-                    isLoading = false,
-                    error = null
-                )
-            }
-        } else {
-            _detallesUiState.update {
-                it.copy(
-                    isLoading = false,
-                    error = "No se pudo encontrar el lugar con ID $id"
-                )
+        screenModelScope.launch {
+            try {
+                val detallesDelLugar = detallesApi.getDetalles(id)
+                _detallesUiState.update {
+                    it.copy(
+                        lugar = detallesDelLugar?.toElemento(),
+                        isLoading = false,
+                        error = null
+                    )
+                }
+            } catch (e: Exception) {
+                println("ERROR en la llamada de detalles: ${e.message}")
+                _detallesUiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = "Error al cargar los detalles: ${e.message}"
+                    )
+                }
             }
         }
     }
