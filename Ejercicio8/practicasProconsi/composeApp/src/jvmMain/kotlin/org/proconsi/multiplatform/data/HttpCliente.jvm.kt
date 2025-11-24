@@ -11,7 +11,6 @@ actual fun createHttpClient(): HttpClient {
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
-                isLenient = true
             })
         }
     }

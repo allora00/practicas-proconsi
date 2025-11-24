@@ -10,7 +10,7 @@ import org.proconsi.multiplatform.domain.model.toElemento
 import org.proconsi.multiplatform.domain.model.Elemento
 import org.proconsi.multiplatform.domain.repository.LugarRepository
 
-class LugarApi(httpClient1: HttpClient) : LugarRepository {
+class LugarApi(httpClient: HttpClient) : LugarRepository {
     private val httpClient = createHttpClient()
     private val apiUrl = "https://tuciudaddecerca-api.proconsi.com/Categoria"
 
