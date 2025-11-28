@@ -3,9 +3,15 @@ package org.proconsi.multiplatform.ui
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.proconsi.multiplatform.data.database.FavoritoDAO
+import org.proconsi.multiplatform.data.database.FavoritoEntity
 import org.proconsi.multiplatform.data.remote.DetallesApi
 import org.proconsi.multiplatform.data.remote.LugarApi
 import org.proconsi.multiplatform.domain.model.Elemento
@@ -26,7 +32,7 @@ data class DetallesUiState(
 )
 
 //Actua de puente entre la logica y la interfaz
-class AppViewModel(private val lugarApi: LugarApi, private val detallesApi: DetallesApi) : ScreenModel {
+class AppViewModel(private val lugarApi: LugarApi, private val detallesApi: DetallesApi, private val favoritoDao : FavoritoDAO) : ScreenModel {
 
     //Crea contenedor de estado de la ui
     private val _lugaresUiState = MutableStateFlow(LugaresUiState())
@@ -91,4 +97,41 @@ class AppViewModel(private val lugarApi: LugarApi, private val detallesApi: Deta
             }
         }
     }
+
+    fun esLugarFavorito(id: Int): StateFlow<Boolean> {
+        return favoritoDao.esFavorito(id)
+            .stateIn(
+                scope = screenModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = false
+            )
+    }
+
+    /**
+     * La función estrella: añade o quita un lugar de favoritos.
+     */
+    fun toggleFavorito(lugar: Elemento) {
+        screenModelScope.launch {
+            // Comprobamos si el lugar ya es favorito.
+            // 'first()' coge el valor actual del Flow y para.
+            val esFavoritoActual = favoritoDao.esFavorito(lugar.id).first()
+
+            if (esFavoritoActual) {
+                // Si ya es favorito, lo borramos.
+                println("Borrando de favoritos: ${lugar.nombre}")
+                favoritoDao.borrar(lugar.id)
+            } else {
+                // Si no es favorito, lo insertamos.
+                println("Añadiendo a favoritos: ${lugar.nombre}")
+                val favoritoEntity = FavoritoEntity(
+                    id = lugar.id,
+                    nombre = lugar.nombre,
+                    urlImagen = lugar.urlImagen,
+                    descripcionCorta = lugar.descripcionCorta
+                )
+                favoritoDao.insertar(favoritoEntity)
+            }
+        }
+    }
+
 }

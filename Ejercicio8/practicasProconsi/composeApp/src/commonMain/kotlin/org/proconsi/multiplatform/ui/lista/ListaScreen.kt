@@ -31,7 +31,9 @@ import org.proconsi.multiplatform.ui.AppViewModel
 import org.proconsi.multiplatform.ui.detalles.DetallesScreen
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import org.proconsi.multiplatform.data.createHttpClient
+import org.proconsi.multiplatform.data.database.AppDatabase
 import org.proconsi.multiplatform.data.remote.DetallesApi
+import org.proconsi.multiplatform.data.database.getAppDatabase
 
 object ListScreen : Screen {
 
@@ -41,7 +43,9 @@ object ListScreen : Screen {
             val httpClient = createHttpClient()
             val lugarApi = LugarApi(httpClient)
             val detallesApi = DetallesApi(httpClient)
-            AppViewModel(lugarApi, detallesApi)
+            val database: AppDatabase = getAppDatabase()
+            val favoritoDao = database.favoritoDao()
+            AppViewModel(lugarApi, detallesApi, favoritoDao)
         }
         val uiState by appViewModel.lugaresUiState.collectAsState()
         val navigator = LocalNavigator.currentOrThrow

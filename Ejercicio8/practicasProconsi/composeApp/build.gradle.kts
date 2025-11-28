@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinxSerialization)
@@ -10,6 +9,7 @@ plugins {
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+
 }
 
 kotlin {
@@ -26,7 +26,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation("app.cash.sqldelight:android-driver:2.0.2")
+            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -40,10 +41,7 @@ kotlin {
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.android)
-            implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.cio)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlin.inject.runtime)
@@ -52,8 +50,14 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.screenmodel)
-            implementation("androidx.room:room-runtime:2.6.1")
-            implementation("androidx.room:room-ktx:2.6.1")
+            implementation(compose.materialIconsExtended)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.room.ktx)
+            //Linea de stackoverflow
+            implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
+
+            api(libs.androidx.room.runtime)
+            api(libs.androidx.room.ktx)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -61,18 +65,19 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.ktor.client.cio)
         }
     }
 }
 
 android {
     namespace = "org.proconsi.multiplatform"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "org.proconsi.multiplatform"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk = 24
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }
@@ -92,10 +97,8 @@ android {
     }
 }
 room {
-    schemaDirectory("$projectDir/schemas")
-}
-dependencies {
-    debugImplementation(compose.uiTooling)
+    schemaDirectory(file("schemas").absolutePath)
+
 }
 
 compose.desktop {
@@ -108,6 +111,16 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+dependencies{
+    add("kspCommonMainMetadata", libs.androidx.room.compiler)
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
+
+    add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
+    add("kspAndroid", libs.kotlin.inject.compiler)
+    add("kspJvm", libs.kotlin.inject.compiler)
 }
 
 ksp{
