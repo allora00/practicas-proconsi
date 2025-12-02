@@ -1,15 +1,14 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.composeHotReload)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
-
 }
 
 kotlin {
@@ -38,7 +37,6 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -53,8 +51,6 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.room.ktx)
-            //Linea de stackoverflow
-            implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
 
             api(libs.androidx.room.runtime)
             api(libs.androidx.room.ktx)
@@ -72,12 +68,12 @@ kotlin {
 
 android {
     namespace = "org.proconsi.multiplatform"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "org.proconsi.multiplatform"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
     }
@@ -123,6 +119,6 @@ dependencies{
     add("kspJvm", libs.kotlin.inject.compiler)
 }
 
-ksp{
+ksp {
     arg("me.tatarka.inject.generate.ksp", "true")
 }
