@@ -7,9 +7,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.composeHotReload)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.androidx.room)
-}
+    alias(libs.plugins.androidx.room)}
 
 kotlin {
     androidTarget {
@@ -25,8 +25,6 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.client.android)
-            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -37,9 +35,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.cio)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlin.inject.runtime)
@@ -48,12 +50,6 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.screenmodel)
-            implementation(compose.materialIconsExtended)
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.room.ktx)
-
-            api(libs.androidx.room.runtime)
-            api(libs.androidx.room.ktx)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -61,19 +57,18 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
-            implementation(libs.ktor.client.cio)
         }
     }
 }
 
 android {
     namespace = "org.proconsi.multiplatform"
-    compileSdk = 36
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "org.proconsi.multiplatform"
-        minSdk = 24
-        targetSdk = 36
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -93,8 +88,10 @@ android {
     }
 }
 room {
-    schemaDirectory(file("schemas").absolutePath)
-
+    schemaDirectory("$projectDir/schemas")
+}
+dependencies {
+    debugImplementation(compose.uiTooling)
 }
 
 compose.desktop {
@@ -109,16 +106,6 @@ compose.desktop {
     }
 }
 
-dependencies{
-    add("kspCommonMainMetadata", libs.androidx.room.compiler)
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspJvm", libs.androidx.room.compiler)
-
-    add("kspCommonMainMetadata", libs.kotlin.inject.compiler)
-    add("kspAndroid", libs.kotlin.inject.compiler)
-    add("kspJvm", libs.kotlin.inject.compiler)
-}
-
-ksp {
+ksp{
     arg("me.tatarka.inject.generate.ksp", "true")
 }
