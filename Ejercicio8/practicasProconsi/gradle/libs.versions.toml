@@ -23,7 +23,8 @@ kotlin-inject="0.7.0"
 kamel = "1.0.8"
 voyager = "1.0.0"
 koin = "3.5.6"
-koin-compose = "3.5.6"
+koin-compose = "1.1.5"
+compose = "1.6.5"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -53,6 +54,9 @@ kamel-image-default = { module = "media.kamel:kamel-image-default", version.ref 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager"}
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "compose" }
+koin-android = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version = "1.0.0" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

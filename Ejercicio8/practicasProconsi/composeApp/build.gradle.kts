@@ -25,6 +25,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -50,6 +51,8 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.screenmodel)
+            implementation(libs.androidx.material.icons.extended)
+            implementation(libs.voyager.koin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
